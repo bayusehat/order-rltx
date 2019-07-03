@@ -113,7 +113,7 @@
 						                	<input type="number" name="bisadiretur" value="'.$data->jumlah.'" class="form-barang input-sm qtymax" required>
 						                </td>
 						                <td>
-						                	<input type="number" name="qty_retur[]" class="form-control qty quantityretur input-sm" onkeyup="update_qty()" value="0" required>
+						                	<input type="text" name="qty_retur[]" class="form-control qty quantityretur input-sm" onkeyup="update_qty()" required>
 						                </td>
 						                <td>
 						                	<input type="text" name="subtotal_retur[]" class="form-barang subtotal input-sm" value="0" id="" required readonly>

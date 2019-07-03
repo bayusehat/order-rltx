@@ -116,7 +116,7 @@
 									                	<input type="hidden" name="diskon" value="'.$data->diskon.'">
 									                </td>
 									                <td>
-									                	<input type="number" name="qty_retur[]" class="form-control quantityretur input-sm" onkeyup="update_qty()" placeholder="Jumlah Retur" required>
+									                	<input type="text" name="qty_retur[]" class="form-control quantityretur input-sm" onkeyup="update_qty()" placeholder="Jumlah Retur" required>
 									                </td>
 									                <td>
 									                	<input type="text" name="subtotal_retur[]" class="form-barang subtotal input-sm" placeholder="Subtotal" required readonly>

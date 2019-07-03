@@ -1186,7 +1186,7 @@ class Transaction_model extends CI_Model {
             $totalRetur = $retur->totalRetur;
         }
 
-        $this->db->update('tb_retur_pembelian', array('total_retur' => $totalRetur),array('id_retur_pembelian'=>$id_retur_pembelian));
+        $this->db->update('tb_retur_pembelian', array('total_retur_pembelian' => $totalRetur),array('id_retur_pembelian'=>$id_retur_pembelian));
 
         $getTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_pembelian WHERE id_pembelian='.$id_pembelian.' AND deleted=0')->result();
         foreach ($getTotal as $tot) {
