@@ -716,19 +716,19 @@ class Transaction_model extends CI_Model {
 
 			$new_qty[$i] = -1*$qty_retur[$i] + $qty_jual[$i];
             $new_subtotal[$i] = $new_qty[$i]*$harga[$i];
+
             // if($diskon[$i] > 0){
             //     $new_subtotal[$i] = ($diskon[$i]/100) * $new_subtotal[$i];
             // }else{
             //     $new_subtotal[$i] = $new_subtotal[$i];
             // }
 	    	
-
     		$jual_update[] = array(
     			'id_detail_penjualan' => $id_detail_penjualan[$i],
     			'jumlah' => $new_qty[$i],
     			'subtotal' => $new_subtotal[$i]
     		);
-
+            //Reverse stok ke master barang
             $currentStok = $this->db->query('SELECT * FROM tb_barang WHERE id_barang='.$id_barang[$i])->row();
             $newcurrent = $currentStok->stok;
             $newStok[$i] = $currentStok->stok + $qty_retur[$i];
@@ -737,7 +737,7 @@ class Transaction_model extends CI_Model {
                 'id_barang' => $id_barang[$i],
                 'stok' => $newStok[$i]
             );
-
+            //history stok
             $history[] = array(
                 'id_barang' => $id_barang[$i],
                 'mod_stok' => $qty_retur[$i],
@@ -863,6 +863,7 @@ class Transaction_model extends CI_Model {
     			'subtotal' => $new_subtotal[$i]
     		);
 
+            //Kurangi stok master barang
             $currentStok = $this->db->query('SELECT * FROM tb_barang WHERE id_barang='.$id_barang[$i])->row();
             $newcurrent = $currentStok->stok;
             $newStok[$i] = $currentStok->stok - $qty_ubah[$i];
@@ -872,6 +873,7 @@ class Transaction_model extends CI_Model {
                 'stok' => $newStok[$i]
             );
 
+            //History Stok
             $history[] = array(
                 'id_barang' => $id_barang[$i],
                 'mod_stok' => $qty_ubah[$i],
@@ -1026,6 +1028,8 @@ class Transaction_model extends CI_Model {
         $this->db->update_batch('tb_detail_pembelian',$beli_update,'id_detail_pembelian');
         $this->db->update_batch('tb_barang',$stok_barang,'id_barang');
         $this->db->insert_batch('tb_history_stok', $history);
+
+        //Total Pembelian Temp
         $getTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_pembelian WHERE id_pembelian='.$id_pembelian.' AND deleted=0')->result();
         foreach ($getTotal as $tot) {
             $total = $tot->totals;
@@ -1033,6 +1037,7 @@ class Transaction_model extends CI_Model {
 
         $getRow = $this->db->query('SELECT * FROM tb_pembelian WHERE id_pembelian='.$id_pembelian)->row();
 
+        //Apabila ada PPN dan hitung final total
         if($getRow->ppn != 'Exclude'){
             $hitungppn = (10/100) * $total;
             $getFinalTotal = $total + $hitungppn;
@@ -1586,12 +1591,86 @@ class Transaction_model extends CI_Model {
         $this->db->update('tb_retur_penjualan', array('total_retur' => $totalRetur),array('id_retur_penjualan'=>$id_retur_penjualan));
 
         $getRowId = $this->db->query('SELECT * FROM tb_retur_penjualan WHERE id_retur_penjualan='.$id_retur_penjualan)->row();
-        $getFinalTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_penjualan WHERE id_penjualan='.$getRowId->id_penjualan)->result();
-        foreach ($getFinalTotal as $row) {
+        $getTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_penjualan WHERE id_penjualan='.$getRowId->id_penjualan)->result();
+        foreach ($getTotal as $row) {
             $total = $row->totals;
         }
 
-        $this->db->update('tb_penjualan', array('total' => $total),array('id_penjualan'=>$getRowId->id_penjualan));
+        $getRow = $this->db->query('SELECT * FROM tb_penjualan WHERE id_penjualan='.$getRowId->id_penjualan)->row();
+
+        if($getRow->ppn != 'Exclude'){
+            $hitungppn = (10/100) * $total;
+            $getFinalTotal = $total + $hitungppn;
+        }else{
+            $getFinalTotal = $total;
+            $hitungppn = $getRow->nominal_ppn;
+        }
+
+        $this->db->update('tb_penjualan', array('nominal_ppn'=>$hitungppn,'total' => $getFinalTotal),array('id_penjualan'=>$getRowId->id_penjualan));
+        // print_r($getFinalTotal);
+
+        if($this->db->affected_rows()>0){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+
+    public function hapus_retur_pembelian($id_retur_pembelian)
+    {
+        $this->db->update('tb_retur_pembelian', array('deleted'=>'1'), array('id_retur_pembelian'=>$id_retur_pembelian));
+        $getDetail = $this->db->query('SELECT * FROM tb_detail_retur_pembelian WHERE id_retur_pembelian='.$id_retur_pembelian.' AND deleted=0')->result();
+
+        foreach ($getDetail as $data) {
+            $id_barang = $data->id_barang;
+            $jumlah_beli = $data->jumlah_beli;
+            $jumlah_retur = $data->jumlah_retur;
+            $harga = $data->harga;
+            $id_detail_pembelian = $data->id_detail_pembelian;
+
+            $this->db->update('tb_detail_retur_pembelian', array('deleted'=>'1'),array('id_retur_pembelian' => $id_retur_pembelian));
+
+            $jumlah_balik = $jumlah_beli + $jumlah_retur;
+            $new_subtotal = $harga * $jumlah_balik;
+
+            //Reverse to detail penjualan
+            $reverse = array(
+                'jumlah' => $jumlah_balik,
+                'subtotal' => $new_subtotal
+            );
+            $this->db->update('tb_detail_pembelian', $reverse,array('id_detail_pembelian'=>$id_detail_pembelian));
+
+            //Pengurangan dari stok master barang
+            $getCurrentStok = $this->db->query('SELECT * FROM tb_barang WHERE id_barang='.$id_barang)->row();
+            $new_stok = $getCurrentStok->stok + $jumlah_retur;
+            $this->db->update('tb_barang', array('stok'=> $new_stok),array('id_barang'=>$id_barang));
+
+        }
+
+        $generateTotalRetur = $this->db->query('SELECT SUM(subtotal_retur) as totalRetur FROM tb_detail_retur_pembelian WHERE id_retur_pembelian='.$id_retur_pembelian.' AND deleted=0')->result();
+        foreach ($generateTotalRetur as $retur) {
+            $totalRetur = $retur->totalRetur;
+        }
+
+        $this->db->update('tb_retur_pembelian', array('total_retur_pembelian' => $totalRetur),array('id_retur_pembelian'=>$id_retur_pembelian));
+
+        $getRowId = $this->db->query('SELECT * FROM tb_retur_pembelian WHERE id_retur_pembelian='.$id_retur_pembelian)->row();
+        $getTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_pembelian WHERE id_pembelian='.$getRowId->id_pembelian)->result();
+        foreach ($getTotal as $row) {
+            $total = $row->totals;
+        }
+
+        $getRow = $this->db->query('SELECT * FROM tb_pembelian WHERE id_pembelian='.$getRowId->id_pembelian)->row();
+
+        if($getRow->ppn != 'Exclude'){
+            $hitungppn = (10/100) * $total;
+            $getFinalTotal = $total + $hitungppn;
+        }else{
+            $getFinalTotal = $total;
+            $hitungppn = $getRow->nominal_ppn;
+        }
+
+        $this->db->update('tb_pembelian', array('nominal_ppn'=>$hitungppn,'total' => $getFinalTotal),array('id_pembelian'=>$getRowId->id_pembelian));
         // print_r($getFinalTotal);
 
         if($this->db->affected_rows()>0){

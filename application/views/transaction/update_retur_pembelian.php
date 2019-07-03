@@ -15,6 +15,11 @@
 	    	</div>
 	    	<br>
 	    	<div class="card">
+	    		<div class="row">
+	    			<div class="col-md-12 col-sm-12">
+	    				<em><h4 class="text-danger">* Halaman ini hanya untuk membatalkan/mengurangi jumlah retur barang</h4></em>
+	    			</div>
+	    		</div>
 		        <div class="row">
 		            <div class="col-lg-4 col-md-4 col-sm-4">
 		            	<div class="form-group">
@@ -53,7 +58,7 @@
 		        <!-- Detail Pembelian -->
 		        <div class="row">
 		        	<div class="col-md-12 col-sm-12">
-		        		<em><h4 class="text-danger">* Halaman ini hanya untuk membatalkan retur barang</h4></em>
+		        		<em><h5 class="text-danger">* Hapus apabila barang apabila tidak dikembalikan retur</h5></em>
 		        		<div class="scroll">
 							<table class="table table-striped table-bordered table-sm" id="myTable">
 								<thead>
@@ -87,7 +92,7 @@
 						                	<input type="text" name="harga_barang[]" value="'.$data->harga.'" class="form-barang price input-sm" required readonly>
 						                </td>
 						                <td>
-						                	<input type="number" name="qty_beli[]" value="'.$data->jumlah_beli.'" class="form-barang qtybeli input-sm" id="" required>
+						                	<input type="number" name="qty_beli[]" value="'.$data->jumlah_beli.'" class="form-barang qtybeli input-sm" required>
 						                </td>
 						                <td>
 						                	<input type="number" name="qty_retur[]" value="'.$data->jumlah_retur.'" class="form-barang qtyretur input-sm" required>
@@ -137,7 +142,7 @@
 		        </div>
 		        <div class="row">
 		        	<div class="col-md-12 col-sm-12">
-		        		<input type="submit" name="submit" value="SIMPAN RETUR PEMBELIAN <?php echo $update->nomor_pembelian;?>" class="btn btn-success btn-lg" id="btnSubmit" style="width: 100%">
+		        		<input type="submit" name="submit" value="UPDATE RETUR PEMBELIAN <?php echo $update->nomor_pembelian;?>" class="btn btn-info btn-lg" id="btnSubmit" style="width: 100%">
 		        	</div>
 		        </div>
 		    </div>
@@ -226,4 +231,9 @@
 		}
 	});
 
+	function hapus_row(e) {
+            	$(e).parent().parent().remove();
+            	// total();
+            	// ppn();
+            }
   </script>

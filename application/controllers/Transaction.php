@@ -118,13 +118,13 @@ class Transaction extends CI_Controller {
    	public function hapus_retur_penjualan($id_retur_penjualan)
    	{
    		if($this->session->userdata('logged_in')){
-   			$id_penjualan = $this->db->query('SELECT id_penjualan FROM tb_retur_penjualan WHERE id_retur_penjualan='.$id_retur_penjualan)->row();
+   			$id_penjualan = $this->db->query('SELECT * FROM tb_retur_penjualan WHERE id_retur_penjualan='.$id_retur_penjualan)->row();
    			if($this->Transaction_model->hapus_retur_penjualan($id_retur_penjualan)){
    				$this->session->set_flashdata('berhasil', 'Hapus return penjualan berhasils!');
-	   	 		redirect('admin/to_retur_penjualan/'.$id_penjualan);
+	   	 		redirect('admin/to_retur_penjualan/'.$id_penjualan->id_penjualan);
    			}else{
    				$this->session->set_flashdata('gagal', 'Hapus return penjualan gagal!');
-	   	 		redirect('admin/to_retur_penjualan/'.$id_penjualan);
+	   	 		redirect('admin/to_retur_penjualan/'.$id_penjualan->id_penjualan);
    			}
    		}else{
    			redirect('admin','refresh');
@@ -160,6 +160,22 @@ class Transaction extends CI_Controller {
 	   	 }else{
 	   	 	redirect('admin','refresh');
 	   	 }
+	}
+
+	public function hapus_retur_pembelian($id_retur_pembelian)
+	{
+		if($this->session->userdata('logged_in')){
+   			$id_pembelian = $this->db->query('SELECT * FROM tb_retur_pembelian WHERE id_retur_pembelian='.$id_retur_pembelian)->row();
+   			if($this->Transaction_model->hapus_retur_pembelian($id_retur_pembelian)){
+   				$this->session->set_flashdata('berhasil', 'Hapus return pembelian berhasil!');
+	   	 		redirect('admin/to_retur_pembelian/'.$id_pembelian->id_pembelian);
+   			}else{
+   				$this->session->set_flashdata('gagal', 'Hapus return pembelian gagal!');
+	   	 		redirect('admin/to_retur_pembelian/'.$id_pembelian->id_pembelian);
+   			}
+   		}else{
+   			redirect('admin','refresh');
+   		}
 	}
 
 	public function get_barang_stock_opname()

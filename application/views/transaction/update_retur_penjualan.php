@@ -17,7 +17,7 @@
 	    	<div class="card">
 	    		<div class="row">
 	    			<div class="col-md-12 col-sm-12">
-	    				<em><h4 class="text-danger">* Halaman ini hanya untuk membatalkan retur barang</h4></em>
+	    				<em><h4 class="text-danger">* Halaman ini hanya untuk membatalkan/mengurangi jumlah retur barang</h4></em>
 	    			</div>
 	    		</div>
 		        <div class="row">
@@ -57,6 +57,7 @@
 		        <!-- Detail Penjualan -->
 		        <div class="row">
 		        	<div class="col-md-12 col-sm-12">
+		        		<em><h5 class="text-danger">* Hapus apabila barang apabila tidak dikembalikan retur</h5></em>
 		        		<div class="scroll">
 							<table class="table table-striped table-bordered table-condensed" id="myTable">
 								<thead>
@@ -141,7 +142,7 @@
 		        </div>
 		        <div class="row">
 		        	<div class="col-md-12 col-sm-12">
-		        		<input type="submit" name="submit" value="SIMPAN PERUBAHAN RETUR PENJUALAN <?php echo $update->nomor_penjualan;?>" class="btn btn-success btn-lg" id="btnSubmit" style="width: 100%">
+		        		<input type="submit" name="submit" value="UPDATE PERUBAHAN RETUR PENJUALAN <?php echo $update->nomor_penjualan;?>" class="btn btn-info btn-lg" id="btnSubmit" style="width: 100%">
 		        	</div>
 		        </div>
 		    </div>
@@ -229,4 +230,10 @@
 			$('.dropdown-toggle').attr('aria-expanded',false);
 		}
 	});
+
+	function hapus_row(e) {
+            	$(e).parent().parent().remove();
+            	// total();
+            	// ppn();
+            }
   </script>

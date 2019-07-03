@@ -191,7 +191,7 @@
 				            					<a href="'.base_url().'index.php/admin/detail_retur_pembelian/'.$data->id_retur_pembelian.'" class="btn btn-default btn-sm"><i class="fa fa-file"></i> Detail Retur</a>
 				            					<a href="'.base_url().'index.php/admin/retur_pembelian_print/'.$data->id_retur_pembelian.'" class="btn btn-info btn-sm"><i class="fa fa-print"></i> Cetak Retur</a>
 				            					<a href="'.base_url().'index.php/admin/to_update_retur_pembelian/'.$data->id_retur_pembelian.'" class="btn btn-warning btn-sm"><i class="fa fa-sign-in-alt"></i> Batalkan Retur</a>
-				            					<a href="#" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus Retur</a>
+				            					<a href="'.base_url().'index.php/transaction/hapus_retur_pembelian/'.$data->id_retur_pembelian.'" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus Retur</a>
 				            				</td>
 				            			</tr>
 				            			';
