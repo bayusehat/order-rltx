@@ -113,7 +113,7 @@
 									                </td>
 									                 <td>
 									                	<input type="number" name="bisadiretur" value="'.$data->jumlah.'" class="form-barang input-sm qtymax" required>
-									                	<input type="hidden" name="diskon" value="'.$data->diskon.'">
+									                	<input type="hidden" name="diskon[]" value="'.$data->diskon.'">
 									                </td>
 									                <td>
 									                	<input type="text" name="qty_retur[]" class="form-control quantityretur input-sm" onkeyup="update_qty()" placeholder="Jumlah Retur" required>

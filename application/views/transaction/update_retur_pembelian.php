@@ -96,6 +96,7 @@
 						                </td>
 						                <td>
 						                	<input type="number" name="qty_retur[]" value="'.$data->jumlah_retur.'" class="form-barang qtyretur input-sm" required>
+						                	<input type="hidden" name="diskon[]" value="'.$data->diskon.'">
 						                </td>
 						                <td>
 						                	<input type="text" name="qty_ubah[]" class="form-control qtyubah input-sm" onkeyup="update_qty()" required>

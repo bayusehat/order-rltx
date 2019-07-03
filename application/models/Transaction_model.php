@@ -696,6 +696,7 @@ class Transaction_model extends CI_Model {
     	$qty_retur = $this->input->post('qty_retur');
     	$subtotal = $this->input->post('subtotal_retur');
     	$id_detail_penjualan = $this->input->post('id_detail_penjualan');
+        $diskon = $this->input->post('diskon');
     	
 
     	foreach($id_barang as $i => $item) { 
@@ -708,6 +709,7 @@ class Transaction_model extends CI_Model {
     			'nama_barang' => $nama_barang[$i],
     			'harga' => $harga[$i],
     			'jumlah_jual' => $new_qty_jual[$i],
+                'diskon' => $diskon[$i],
     			'jumlah_retur' => $qty_retur[$i],
     			'subtotal_retur' => $subtotal[$i],
     			'id_retur_penjualan' => $last_id,
@@ -717,11 +719,12 @@ class Transaction_model extends CI_Model {
 			$new_qty[$i] = -1*$qty_retur[$i] + $qty_jual[$i];
             $new_subtotal[$i] = $new_qty[$i]*$harga[$i];
 
-            // if($diskon[$i] > 0){
-            //     $new_subtotal[$i] = ($diskon[$i]/100) * $new_subtotal[$i];
-            // }else{
-            //     $new_subtotal[$i] = $new_subtotal[$i];
-            // }
+            //Jika ada barang diskon
+            if($diskon[$i] > 0){
+                $new_subtotal[$i] = ($diskon[$i]/100) * $new_subtotal[$i];
+            }else{
+                $new_subtotal[$i] = $new_subtotal[$i];
+            }
 	    	
     		$jual_update[] = array(
     			'id_detail_penjualan' => $id_detail_penjualan[$i],
@@ -837,6 +840,7 @@ class Transaction_model extends CI_Model {
     	$subtotal = $this->input->post('subtotal_retur');
     	$id_detail_retur_penjualan = $this->input->post('id_detail_retur_penjualan');
     	$id_detail_penjualan = $this->input->post('id_detail_penjualan');
+        $diskon = $this->input->post('diskon');
     	
 
     	foreach($id_barang as $i => $item) { 
@@ -849,6 +853,7 @@ class Transaction_model extends CI_Model {
                 'nama_barang' => $nama_barang[$i],
                 'harga' => $harga[$i],
                 'jumlah_jual' => $new_qty_jual[$i],
+                'diskon' => $diskon[$i],
                 'jumlah_retur' => $new_qty_retur[$i],
                 'subtotal_retur' => $subtotal[$i],
                 'id_retur_penjualan' => $id_retur_penjualan
@@ -856,6 +861,12 @@ class Transaction_model extends CI_Model {
 
             $new_qty[$i] = $new_qty_retur[$i] + $qty_jual[$i];
 	    	$new_subtotal[$i] = $new_qty_jual[$i]*$harga[$i];
+
+            if($diskon[$i] > 0){
+                $new_subtotal[$i] = ($diskon[$i]/100) * $new_subtotal[$i];
+            }else{
+                $new_subtotal[$i] = $new_subtotal[$i];
+            }
 
     		$jual_update[] = array(
     			'id_detail_penjualan' => $id_detail_penjualan[$i],
@@ -882,15 +893,12 @@ class Transaction_model extends CI_Model {
                 'id_penjualan' => $id_penjualan,
                 'id_pembelian' => 0
              );
-    	}
 
-        if($total_retur == 0){
-            $this->db->update('tb_retur_penjualan',array('deleted' => '1'),array('id_retur_penjualan' => $id_retur_penjualan));
-            $this->db->update('tb_detail_retur_penjualan',array('deleted'=>'1'),array('id_retur_penjualan' => $id_retur_penjualan));
-        }else{
-            $this->db->update('tb_retur_penjualan',array('deleted' => '0'),array('id_retur_penjualan' => $id_retur_penjualan));
-            $this->db->update('tb_detail_retur_penjualan',array('deleted'=>'0'),array('id_retur_penjualan' => $id_retur_penjualan));
-        }
+            //Apabila jumlah retur setelah ubah 0 maka detail retur otomatis dihapus
+            if($new_qty_retur[$i] == 0){
+                $this->db->update('tb_detail_retur_penjualan', array('deleted' => '1'),array('id_detail_retur_penjualan' => $id_detail_retur_penjualan[$i]));
+            };
+    	}
 
     	$this->db->update_batch('tb_detail_retur_penjualan',$detail,'id_detail_retur_penjualan');
     	$this->db->update_batch('tb_detail_penjualan',$jual_update,'id_detail_penjualan');
@@ -903,6 +911,11 @@ class Transaction_model extends CI_Model {
         }
 
         $this->db->update('tb_retur_penjualan', array('total_retur' => $totalRetur),array('id_retur_penjualan'=>$id_retur_penjualan));
+
+        //Check apabila total retur 0 maka otomatis dihapus
+        if($totalRetur == 0){
+            $this->db->update('tb_retur_pembelian', array('deleted'=>'1'), array('id_retur_pembelian'=>$id_retur_pembelian));
+        };
 
         $getTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_penjualan WHERE id_penjualan='.$id_penjualan.' AND deleted=0')->result();
         foreach ($getTotal as $tot) {
@@ -1122,6 +1135,7 @@ class Transaction_model extends CI_Model {
         $subtotal = $this->input->post('subtotal_retur');
         $id_detail_pembelian = $this->input->post('id_detail_pembelian');
         $id_detail_retur_pembelian = $this->input->post('id_detail_retur_pembelian');
+        $diskon = $this->input->post('diskon');
         
 
         foreach($id_barang as $i => $item) { 
@@ -1135,6 +1149,7 @@ class Transaction_model extends CI_Model {
                 'nama_barang' => $nama_barang[$i],
                 'harga' => $harga[$i],
                 'jumlah_beli' => $new_qty_beli[$i],
+                'diskon' => $diskon[$i],
                 'jumlah_retur' => $new_qty_retur[$i],
                 'subtotal_retur' => $subtotal[$i],
                 'id_detail_pembelian' => $id_detail_pembelian[$i],
@@ -1143,6 +1158,12 @@ class Transaction_model extends CI_Model {
 
             $new_qty[$i] = $qty_retur[$i] + $qty_beli[$i];
             $new_subtotal[$i] = $new_qty_beli[$i]*$harga[$i];
+
+            if($diskon[$i] > 0){
+                $new_subtotal[$i] = ($diskon[$i]/100) * $new_subtotal[$i];
+            }else{
+                $new_subtotal[$i] = $new_subtotal[$i];
+            }
 
             $beli_update[] = array(
                 'id_detail_pembelian' => $id_detail_pembelian[$i],
@@ -1167,15 +1188,20 @@ class Transaction_model extends CI_Model {
                 'id_penjualan' => 0,
                 'id_pembelian' => $id_pembelian
              );
+
+            //Apabila jumlah retur setelah ubah 0 maka detail retur otomatis dihapus
+             if($new_qty_retur[$i] == 0){
+                $this->db->update('tb_detail_retur_pembelian', array('deleted' => '1'),array('id_detail_retur_pembelian' => $id_detail_retur_pembelian[$i]));
+            };
         }
 
-         if($total_retur == 0){
-            $this->db->update('tb_retur_pembelian',array('deleted' => '1'),array('id_retur_pembelian' => $id_retur_pembelian));
-            $this->db->update('tb_detail_retur_pembelian',array('deleted'=>'1'),array('id_retur_pembelian' => $id_retur_pembelian));
-        }else{
-            $this->db->update('tb_retur_pembelian',array('deleted' => '0'),array('id_retur_pembelian' => $id_retur_pembelian));
-            $this->db->update('tb_detail_retur_pembelian',array('deleted'=>'0'),array('id_retur_pembelian' => $id_retur_pembelian));
-        }
+        //  if($total_retur == 0){
+        //     $this->db->update('tb_retur_pembelian',array('deleted' => '1'),array('id_retur_pembelian' => $id_retur_pembelian));
+        //     $this->db->update('tb_detail_retur_pembelian',array('deleted'=>'1'),array('id_retur_pembelian' => $id_retur_pembelian));
+        // }else{
+        //     $this->db->update('tb_retur_pembelian',array('deleted' => '0'),array('id_retur_pembelian' => $id_retur_pembelian));
+        //     $this->db->update('tb_detail_retur_pembelian',array('deleted'=>'0'),array('id_retur_pembelian' => $id_retur_pembelian));
+        // }
 
         $this->db->update_batch('tb_detail_retur_pembelian',$detail,'id_detail_retur_pembelian');
         $this->db->update_batch('tb_detail_pembelian',$beli_update,'id_detail_pembelian');
@@ -1187,6 +1213,11 @@ class Transaction_model extends CI_Model {
         }
 
         $this->db->update('tb_retur_pembelian', array('total_retur_pembelian' => $totalRetur),array('id_retur_pembelian'=>$id_retur_pembelian));
+
+        //Check apabila total retur 0 maka otomatis dihapus
+        if($totalRetur == 0){
+            $this->db->update('tb_retur_pembelian', array('deleted'=>'1'), array('id_retur_pembelian'=>$id_retur_pembelian));
+        };
 
         $getTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_pembelian WHERE id_pembelian='.$id_pembelian.' AND deleted=0')->result();
         foreach ($getTotal as $tot) {
