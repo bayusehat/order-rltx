@@ -1,0 +1,73 @@
+
+    .modal-content{
+        padding: 20px;
+    }
+    .tb-item{
+        width: 100%;
+    }
+    .tb-item td{
+        padding: 5px 5px 5px 0px;
+    }
+    .tb-item th{
+        color: black;
+    }
+    .tb-item .form-control{
+        margin:  0;
+    }
+    .form-item{
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        border-radius: 0px;
+        height: 34px;
+        padding: 10px;
+    }
+    div .modal .form-control{
+        margin: 5px;
+    }
+
+    .border-right{
+        border-right: 2px solid #ccc;
+    }
+    
+    .card-form{
+        background: white;
+        width: 100%;
+        padding: 20px;
+        border-radius: 5px;
+    }
+    td{
+        color: black;
+        margin: 0px;
+        text-align: left;
+    }
+    .kop{
+        padding-bottom: 10px;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 15px;
+    }
+    label{
+        color: black;
+    }
+    .btn-back{
+        margin-top: 8px;
+        width: 70px;
+        color: white;
+        background: #1f2b3c;
+        border-color: #1f2b3c;
+    }
+
+    .btn-see{
+        margin-top: 8px;
+    }
+    .table-section{
+        background: white;
+    }
+    .table-container{
+        background: white;
+    }
+    .tgl{
+        padding-left:15px;
+    }
+

@@ -1,0 +1,10 @@
+body{
+    padding-top: 100px;
+    background: #233043;
+}
+.alert{
+    display: none;
+}
+.center{
+    text-align-last: center;
+}

@@ -1,0 +1,22 @@
+*{
+    font-family: 'Work Sans', sans-serif;
+}
+html,
+button,
+input,
+select,
+textarea {
+   font-family: 'Work Sans', sans-serif;
+}
+#berhasil_ubah,#gagal_ubah{
+    display: none;
+}
+.giro{
+    display: none;
+}
+.red{
+    color : red;
+}
+.sama{
+    font-size:14px;
+}

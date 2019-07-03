@@ -1,0 +1,89 @@
+
+		.form-cart{
+			width: 100%;
+			border:none;
+			font-size: 12px;
+			background: transparent;
+		}
+		.form-barang{
+	        background: transparent;
+	        width: 100%;
+	        border: none;
+    	}
+    	.quantity{
+    		border: 0.5px solid lightgrey;
+    	}
+		.container{
+			padding-bottom: 10px;
+			background: white;
+			height: 550px;
+			border-radius: 10px;
+		}
+		.barang{
+			background: white;
+			overflow-y: scroll;
+			height: 450px;
+			border-radius: 10px;
+		}
+		#autoSuggestionsList > li {
+         	background: none repeat scroll 0 0 #F3F3F3;
+            /* border-bottom: 1px solid #E3E3E3; */
+            list-style: none outside none;
+           	padding: 5px 15px 5px 15px;
+            text-align: left;
+		}
+		
+		#autoSuggestionsList > li:hover {
+			background: none repeat scroll 0 0 lightgrey;
+			color: black;
+	   }
+		.auto_list {
+            border: 1px solid #E3E3E3;
+            /* border-radius: 5px 5px 5px 5px; */
+            position: absolute;
+            z-index: 1;
+            width: 100%;
+        }
+        .scroll{
+        	height: 320px;
+        	overflow-y: scroll;
+        	margin: 10px 0 10px 0;
+        	border: 1px solid lightgrey;
+        }
+        .scroll-laporan{
+        	height: 450px;
+        	overflow-y: scroll;
+        	margin: 10px 0 10px 0;
+        }
+        .has-search .form-control-feedback {
+		    right: initial;
+		    left: 0;
+		    color: #ccc;
+		}
+		.has-search .form-control {
+		    padding-right: 12px;
+		    padding-left: 34px;
+		}
+		.quantity{
+			width: 50px;
+			float: right;
+		}
+		.add_cart{
+			float: right;
+			margin-left: 10px;
+		}
+		.inline{
+			margin-left: 20px;
+		}
+		.search-input{
+			margin-bottom: 20px; 
+		}
+		.logo-trans{
+			float: right;
+		}
+		h6{
+			margin: 3px;
+		}
+		.form-control-sm{
+			margin-bottom: 5px;
+		}
