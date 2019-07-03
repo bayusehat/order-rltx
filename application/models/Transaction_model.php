@@ -1602,7 +1602,7 @@ class Transaction_model extends CI_Model {
     {
         $this->db->update('tb_retur_penjualan', array('deleted'=>'1'), array('id_retur_penjualan'=>$id_retur_penjualan));
         $getDetail = $this->db->query('SELECT * FROM tb_detail_retur_penjualan WHERE id_retur_penjualan='.$id_retur_penjualan.' AND deleted=0')->result();
-
+        $getPenjualan = $this->db->query('SELECT * FROM tb_retur_penjualan WHERE id_retur_penjualan='.$id_retur_penjualan)->row();
         foreach ($getDetail as $data) {
             $id_barang = $data->id_barang;
             $jumlah_jual = $data->jumlah_jual;
@@ -1627,6 +1627,16 @@ class Transaction_model extends CI_Model {
             $new_stok = $getCurrentStok->stok - $jumlah_retur;
             $this->db->update('tb_barang', array('stok'=> $new_stok),array('id_barang'=>$id_barang));
 
+            $history = array(
+                'id_barang' => $id_barang,
+                'mod_stok' => $jumlah_retur,
+                'tanggal' => date('Y-m-d H:i:s'),
+                'keterangan' => 'Hapus retur penjualan barang',
+                'id_penjualan' => $getPenjualan->id_penjualan,
+                'id_pembelian' => 0
+             );
+
+            $this->db->insert('tb_history_stok', $history);
         }
 
         $generateTotalRetur = $this->db->query('SELECT SUM(subtotal_retur) as totalRetur FROM tb_detail_retur_penjualan WHERE id_retur_penjualan='.$id_retur_penjualan.' AND deleted=0')->result();
@@ -1666,7 +1676,7 @@ class Transaction_model extends CI_Model {
     {
         $this->db->update('tb_retur_pembelian', array('deleted'=>'1'), array('id_retur_pembelian'=>$id_retur_pembelian));
         $getDetail = $this->db->query('SELECT * FROM tb_detail_retur_pembelian WHERE id_retur_pembelian='.$id_retur_pembelian.' AND deleted=0')->result();
-
+        $getPembelian = $this->db->query('SELECT * FROM tb_retur_pembelian WHERE id_retur_pembelian='.$id_retur_pembelian)->row();
         foreach ($getDetail as $data) {
             $id_barang = $data->id_barang;
             $jumlah_beli = $data->jumlah_beli;
@@ -1690,6 +1700,17 @@ class Transaction_model extends CI_Model {
             $getCurrentStok = $this->db->query('SELECT * FROM tb_barang WHERE id_barang='.$id_barang)->row();
             $new_stok = $getCurrentStok->stok + $jumlah_retur;
             $this->db->update('tb_barang', array('stok'=> $new_stok),array('id_barang'=>$id_barang));
+
+            $history = array(
+                'id_barang' => $id_barang,
+                'mod_stok' => $jumlah_retur,
+                'tanggal' => date('Y-m-d H:i:s'),
+                'keterangan' => 'Hapus retur pembelian barang',
+                'id_penjualan' => 0,
+                'id_pembelian' => $getPembelian->id_pembelian
+             );
+
+            $this->db->insert('tb_history_stok', $history);
 
         }
 
