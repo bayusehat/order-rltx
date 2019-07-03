@@ -98,7 +98,7 @@
 									                	<input type="number" name="qty_retur[]" value="'.$data->jumlah_retur.'" class="form-barang input-sm qtyretur" required>
 									                </td>
 									                <td>
-									                	<input type="number" name="qty_ubah[]" class="form-control qtyubah input-sm" onkeyup="update_qty()" value="0" required>
+									                	<input type="text" name="qty_ubah[]" class="form-control qtyubah input-sm" onkeyup="update_qty()" required>
 									                </td>
 									                <td>
 									                	<input type="text" name="subtotal_retur[]" value="'.$data->subtotal_retur.'" class="form-barang subtotal input-sm" required readonly>

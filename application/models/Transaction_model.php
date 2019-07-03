@@ -896,6 +896,14 @@ class Transaction_model extends CI_Model {
     	$this->db->update_batch('tb_detail_penjualan',$jual_update,'id_detail_penjualan');
         $this->db->update_batch('tb_barang',$stok_barang,'id_barang');
         $this->db->insert_batch('tb_history_stok',$history);
+
+        $generateTotalRetur = $this->db->query('SELECT SUM(subtotal_retur) as totalRetur FROM tb_detail_retur_penjualan WHERE id_retur_penjualan='.$id_retur_penjualan.' AND deleted=0')->result();
+        foreach ($generateTotalRetur as $retur) {
+            $totalRetur = $retur->totalRetur;
+        }
+
+        $this->db->update('tb_retur_penjualan', array('total_retur' => $totalRetur),array('id_retur_penjualan'=>$id_retur_penjualan));
+
         $getTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_penjualan WHERE id_penjualan='.$id_penjualan.' AND deleted=0')->result();
         foreach ($getTotal as $tot) {
             $total = $tot->totals;
@@ -1173,6 +1181,13 @@ class Transaction_model extends CI_Model {
         $this->db->update_batch('tb_detail_pembelian',$beli_update,'id_detail_pembelian');
         $this->db->update_batch('tb_barang', $stok_barang,'id_barang');
         $this->db->insert_batch('tb_history_stok', $history);
+        $generateTotalRetur = $this->db->query('SELECT SUM(subtotal_retur) as totalRetur FROM tb_detail_retur_pembelian WHERE id_retur_pembelian='.$id_retur_pembelian.' AND deleted=0')->result();
+        foreach ($generateTotalRetur as $retur) {
+            $totalRetur = $retur->totalRetur;
+        }
+
+        $this->db->update('tb_retur_pembelian', array('total_retur' => $totalRetur),array('id_retur_pembelian'=>$id_retur_pembelian));
+
         $getTotal = $this->db->query('SELECT SUM(subtotal) as totals FROM tb_detail_pembelian WHERE id_pembelian='.$id_pembelian.' AND deleted=0')->result();
         foreach ($getTotal as $tot) {
             $total = $tot->totals;
