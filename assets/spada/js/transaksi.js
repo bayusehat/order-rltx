@@ -112,7 +112,7 @@ var qty = {};
 
                     $.ajax({
                         type: "POST",
-                        url: "get_scan_barang",
+                        url: base_url+"/index.php/admin/get_scan_barang",
                         data: post_data,
                         success: function (data) {
                             if (data.length > 0) {
@@ -130,7 +130,7 @@ var qty = {};
 			   var el = $(this);
 			   
 			        $.ajax({
-			            url: "scan_barang",
+			            url: base_url+"/index.php/admin/scan_barang",
 			            dataType: "json",
 			            type: "POST",
 			            data: {'search_data':el.val()},
@@ -203,7 +203,7 @@ var qty = {};
 
                     $.ajax({
                         type: "POST",
-                        url: "get_scan_barang_beli",
+                        url: base_url+"/index.php/admin/get_scan_barang_beli",
                         data: post_data,
                         success: function (data) {
                             if (data.length > 0) {
@@ -221,7 +221,7 @@ var qty = {};
 			   var el = $(this);
 			   
 			        $.ajax({
-			            url: "scan_barang_beli",
+			            url: base_url+"/index.php/admin/scan_barang_beli",
 			            dataType: "json",
 			            type: "POST",
 			            data: {'search_data':el.val()},
@@ -485,7 +485,7 @@ var qty = {};
 				}else{
 						$.ajax({
 						type : "POST",
-						url : "simpan_penjualan",
+						url : base_url+"/index.php/admin/simpan_penjualan",
 						dataType : "JSON",
 						data : form_data,
 						success:function(message){
@@ -543,7 +543,7 @@ var qty = {};
 				}else{
 						$.ajax({
 						type : "POST",
-						url : "simpan_pembelian",
+						url : base_url+"/index.php/admin/simpan_pembelian",
 						dataType : "JSON",
 						data : form_data,
 						success:function(data){
@@ -588,7 +588,7 @@ var qty = {};
 			}
 			$.ajax({
 				type : 'POST',
-				url : 'detail_harga_penjualan/'+id_barang+url_pelanggan,
+				url : base_url+'/index.php/admin/detail_harga_penjualan/'+id_barang+url_pelanggan,
 				dataType : "JSON",
 				success:function(data){
 					html = '';
@@ -614,7 +614,7 @@ var qty = {};
 			}
 			$.ajax({
 				type : 'POST',
-				url : 'detail_harga_pembelian/'+id_barang+url_supplier,
+				url : base_url+'/index.php/admin/detail_harga_pembelian/'+id_barang+url_supplier,
 				dataType : "JSON",
 				success:function(data){
 					html = '';

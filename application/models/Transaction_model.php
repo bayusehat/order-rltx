@@ -1746,6 +1746,273 @@ class Transaction_model extends CI_Model {
             return FALSE;
         }
     }
+
+    public function update_detail_penjualan($id_penjualan)
+    {
+        // $detail = array();
+        // $history = array();
+        $id_barang = $this->input->post('id_barang');
+        $sku_barang = $this->input->post('sku_barang');
+        $nama_barang = $this->input->post('nama_barang');
+        $harga  = $this->input->post('harga');
+        $jumlah = $this->input->post('quantity');
+        $subtotal = $this->input->post('subtotal');
+        $diskon = $this->input->post('diskon');
+        $id_detail_penjualan = $this->input->post('id_detail_penjualan');
+        
+        foreach($id_barang as $i => $item){
+            $cek = $this->db->query('SELECT * FROM tb_detail_penjualan WHERE id_barang='.$id_barang[$i].' AND id_penjualan='.$id_penjualan.' AND deleted=0')->num_rows();
+            if($cek > 0){
+                $detail = array(
+                    'id_detail_penjualan' => $id_detail_penjualan[$i],
+                    'id_barang' => $id_barang[$i],
+                    'sku_barang' => $sku_barang[$i],
+                    'nama_barang' => $nama_barang[$i],
+                    'harga' => $harga[$i],
+                    'diskon' => $diskon[$i],
+                    'jumlah' => $jumlah[$i],
+                    'subtotal' => $subtotal[$i],
+                    'id_penjualan' => $id_penjualan
+                );
+
+                // $mod = -1*$jumlah[$i];
+                
+                //UPDATE HARGA DI MASTER BARANG APABILA LEBIH MAHAL, NANTINYA SAVE JUGA DI HISTORY ARUS HARGA
+                $currentbarang = $this->db->query("select harga_jual from tb_barang where id_barang = ".$id_barang[$i])->result();
+                if(count($currentbarang) > 0){
+                    $current_barang_harga = $currentbarang[0]->harga_jual;
+                    if($current_barang_harga < $harga[$i])
+                        $this->db->query("update tb_barang set harga_jual = ".$harga[$i]." where id_barang = ".$id_barang[$i]);
+                }
+
+                //Update stok apabila update
+                $currentStok = $this->db->query('SELECT * FROM tb_barang WHERE id_barang='.$id_barang[$i])->result();
+                $currentStokDetail = $this->db->query('SELECT * FROM tb_detail_penjualan WHERE id_detail_penjualan='.$id_detail_penjualan[$i])->result();
+
+                $mod = $jumlah[$i] - $currentStokDetail[0]->jumlah;
+
+                if($mod > 0){
+                    $mod = $mod;
+                }else{
+                    $mod = -1*$mod;
+                }
+
+                $history = array(
+                    'id_barang' => $id_barang[$i],
+                    'mod_stok' => $mod,
+                    'tanggal' => date('Y-m-d h:i:s'),
+                    'keterangan' => 'Update Detail penjualan',
+                    'id_penjualan' => $id_penjualan
+                );
+
+                if($jumlah[$i] > $currentStokDetail[0]->jumlah){
+                    $updateStok = $currentStok[0]->stok - $mod;
+                }else if($jumlah[$i] < $currentStokDetail[0]->jumlah){
+                    $updateStok = $currentStok[0]->stok + $mod;
+                }else{
+                    $updateStok = $currentStok[0]->stok;
+                }
+
+                $this->db->update('tb_barang', array('stok' => $updateStok), array('id_barang'=> $id_barang[$i]));
+
+                $this->db->where('id_detail_penjualan',$id_detail_penjualan[$i])
+                         ->update('tb_detail_penjualan', $detail);
+                $this->db->insert('tb_history_stok', $history);
+            }else{
+                $detail = array(
+                    'id_barang' => $id_barang[$i],
+                    'sku_barang' => $sku_barang[$i],
+                    'nama_barang' => $nama_barang[$i],
+                    'harga' => $harga[$i],
+                    'diskon' => $diskon[$i],
+                    'jumlah' => $jumlah[$i],
+                    'subtotal' => $subtotal[$i],
+                    'id_penjualan' => $id_penjualan
+                );
+
+                $mod = -1*$jumlah[$i];
+
+                $history = array(
+                    'id_barang' => $id_barang[$i],
+                    'mod_stok' => $mod,
+                    'tanggal' => date('Y-m-d h:i:s'),
+                    'keterangan' => 'Penjualan',
+                    'id_penjualan' => $id_penjualan
+                );
+                
+                //UPDATE HARGA DI MASTER BARANG APABILA LEBIH MAHAL, NANTINYA SAVE JUGA DI HISTORY ARUS HARGA
+                $currentbarang = $this->db->query("select harga_jual from tb_barang where id_barang = ".$id_barang[$i])->result();
+                if(count($currentbarang) > 0){
+                    $current_barang_harga = $currentbarang[0]->harga_jual;
+                    if($current_barang_harga < $harga[$i])
+                        $this->db->query("update tb_barang set harga_jual = ".$harga[$i]." where id_barang = ".$id_barang[$i]);
+                }
+
+                $this->db->insert('tb_detail_penjualan', $detail, array('id_penjualan' => $id_penjualan));
+                $this->db->insert('tb_history_stok', $history);
+            }
+        }
+
+        $getTotal = $this->db->query('SELECT SUM(subtotal) as total FROM tb_detail_penjualan WHERE id_penjualan='.$id_penjualan.' AND deleted=0')->result();
+        $getRow = $this->db->query('SELECT * FROM tb_penjualan WHERE id_penjualan='.$id_penjualan)->row();
+        foreach ($getTotal as $row) {
+            $total = $row->total;
+        }
+
+        if($getRow->ppn != 'Exclude'){
+            $hitungppn = (10/100)*$total;
+            $getFinalTotal = $total + $hitungppn;
+        }else{
+            $hitungppn = $getRow->ppn;
+            $getFinalTotal = $total;
+        }   
+
+        $this->db->update('tb_penjualan', array('nominal_ppn' => $hitungppn,'total' => $getFinalTotal),array('id_penjualan'=>$id_penjualan));
+
+        if($this->db->affected_rows()>0){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+
+    public function update_detail_pembelian($id_pembelian)
+    {
+         // $detail = array();
+        // $history = array();
+        $id_barang = $this->input->post('id_barang');
+        $sku_barang = $this->input->post('sku_barang');
+        $nama_barang = $this->input->post('nama_barang');
+        $harga  = $this->input->post('harga');
+        $jumlah = $this->input->post('quantity');
+        $subtotal = $this->input->post('subtotal');
+        $diskon = $this->input->post('diskon');
+        $id_detail_pembelian = $this->input->post('id_detail_pembelian');
+        
+        foreach($id_barang as $i => $item){
+            $cek = $this->db->query('SELECT * FROM tb_detail_pembelian WHERE id_barang='.$id_barang[$i].' AND id_pembelian='.$id_pembelian.' AND deleted=0')->num_rows();
+            if($cek > 0){
+                $detail = array(
+                    'id_detail_pembelian' => $id_detail_pembelian[$i],
+                    'id_barang' => $id_barang[$i],
+                    'sku_barang' => $sku_barang[$i],
+                    'nama_barang' => $nama_barang[$i],
+                    'harga' => $harga[$i],
+                    'diskon' => $diskon[$i],
+                    'jumlah' => $jumlah[$i],
+                    'subtotal' => $subtotal[$i],
+                    'id_pembelian' => $id_pembelian
+                );
+
+                $mod = $jumlah[$i];
+
+                $history = array(
+                    'id_barang' => $id_barang[$i],
+                    'mod_stok' => $mod,
+                    'tanggal' => date('Y-m-d h:i:s'),
+                    'keterangan' => 'Update Detail enjualan',
+                    'id_pembelian' => $id_pembelian
+                );
+                
+                //UPDATE HARGA DI MASTER BARANG APABILA LEBIH MAHAL, NANTINYA SAVE JUGA DI HISTORY ARUS HARGA
+                $currentbarang = $this->db->query("select harga_jual from tb_barang where id_barang = ".$id_barang[$i])->result();
+                if(count($currentbarang) > 0){
+                    $current_barang_harga = $currentbarang[0]->harga_jual;
+                    if($current_barang_harga < $harga[$i])
+                        $this->db->query("update tb_barang set harga_jual = ".$harga[$i]." where id_barang = ".$id_barang[$i]);
+                }
+
+                //Update stok apabila update
+                $currentStok = $this->db->query('SELECT * FROM tb_barang WHERE id_barang='.$id_barang[$i])->result();
+                $currentStokDetail = $this->db->query('SELECT * FROM tb_detail_pembelian WHERE id_detail_pembelian='.$id_detail_pembelian[$i])->result();
+
+                $mod = $jumlah[$i] - $currentStokDetail[0]->jumlah;
+
+                if($mod > 0){
+                    $mod = $mod;
+                }else{
+                    $mod = -1*$mod;
+                }
+
+                $history = array(
+                    'id_barang' => $id_barang[$i],
+                    'mod_stok' => $mod,
+                    'tanggal' => date('Y-m-d h:i:s'),
+                    'keterangan' => 'Update Detail pembelian',
+                    'id_pembelian' => $id_pembelian
+                );
+
+                if($jumlah[$i] > $currentStokDetail[0]->jumlah){
+                    $updateStok = $currentStok[0]->stok + $mod;
+                }else if($jumlah[$i] < $currentStokDetail[0]->jumlah){
+                    $updateStok = $currentStok[0]->stok - $mod;
+                }else{
+                    $updateStok = $currentStok[0]->stok;
+                }
+
+                $this->db->update('tb_barang', array('stok' => $updateStok), array('id_barang'=> $id_barang[$i]));
+
+
+                $this->db->where('id_detail_pembelian',$id_detail_pembelian[$i])
+                         ->update('tb_detail_pembelian', $detail);
+                $this->db->insert('tb_history_stok', $history);
+            }else{
+                $detail = array(
+                    'id_barang' => $id_barang[$i],
+                    'sku_barang' => $sku_barang[$i],
+                    'nama_barang' => $nama_barang[$i],
+                    'harga' => $harga[$i],
+                    'diskon' => $diskon[$i],
+                    'jumlah' => $jumlah[$i],
+                    'subtotal' => $subtotal[$i],
+                    'id_pembelian' => $id_pembelian
+                );
+
+                $mod = -1*$jumlah[$i];
+
+                $history = array(
+                    'id_barang' => $id_barang[$i],
+                    'mod_stok' => $mod,
+                    'tanggal' => date('Y-m-d h:i:s'),
+                    'keterangan' => 'Penjualan',
+                    'id_pembelian' => $id_pembelian
+                );
+                
+                //UPDATE HARGA DI MASTER BARANG APABILA LEBIH MAHAL, NANTINYA SAVE JUGA DI HISTORY ARUS HARGA
+                $currentbarang = $this->db->query("select harga_jual from tb_barang where id_barang = ".$id_barang[$i])->result();
+                if(count($currentbarang) > 0){
+                    $current_barang_harga = $currentbarang[0]->harga_jual;
+                    if($current_barang_harga < $harga[$i])
+                        $this->db->query("update tb_barang set harga_jual = ".$harga[$i]." where id_barang = ".$id_barang[$i]);
+                }
+
+                $this->db->insert('tb_detail_pembelian', $detail, array('id_pembelian' => $id_pembelian));
+                $this->db->insert('tb_history_stok', $history);
+            }
+        }
+
+        $getTotal = $this->db->query('SELECT SUM(subtotal) as total FROM tb_detail_pembelian WHERE id_pembelian='.$id_pembelian.' AND deleted=0')->result();
+        $getRow = $this->db->query('SELECT * FROM tb_pembelian WHERE id_pembelian='.$id_pembelian)->row();
+        foreach ($getTotal as $row) {
+            $total = $row->total;
+        }
+
+        if($getRow->ppn != 'Exclude'){
+            $hitungppn = (10/100)*$total;
+            $getFinalTotal = $total + $hitungppn;
+        }else{
+            $hitungppn = $getRow->ppn;
+            $getFinalTotal = $total;
+        }   
+
+        $this->db->update('tb_pembelian', array('nominal_ppn' => $hitungppn,'total' => $getFinalTotal),array('id_pembelian'=>$id_pembelian));
+
+        if($this->db->affected_rows()>0){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
 }
 
 /* End of file Transaction.php */

@@ -254,6 +254,21 @@ class Transaction extends CI_Controller {
 		}
 	}
 
+	public function update_detail_penjualan($id_penjualan)
+	{
+		if($this->session->userdata('logged_in')){
+			if($this->Transaction_model->update_detail_penjualan($id_penjualan)){
+				$this->session->set_flashdata('berhasil', 'Penjualan berhasil diperbarui');
+				redirect('admin/detail_penjualan/'.$this->uri->segment(3));
+			}else{
+				$this->session->set_flashdata('gagal', 'Penjualan gagal diperbarui');
+				redirect('admin/detail_penjualan/'.$this->uri->segment(3));
+			}
+		}else{
+			redirect('admin','refresh');
+		}
+	}
+
 	public function edit_pembelian($id_pembelian)
 	{
 		if($this->session->userdata('logged_in')){
@@ -263,6 +278,21 @@ class Transaction extends CI_Controller {
 			}else{
 				$this->session->set_flashdata('gagal', 'Pembelian gagal diperbarui');
 				redirect('admin/detail_pembelian/'.$this->uri->segment(3),'refresh');
+			}
+		}else{
+			redirect('admin','refresh');
+		}
+	}
+
+	public function update_detail_pembelian($id_pembelian)
+	{
+		if($this->session->userdata('logged_in')){
+			if($this->Transaction_model->update_detail_pembelian($id_pembelian)){
+				$this->session->set_flashdata('berhasil', 'Pembelian berhasil diperbarui');
+				redirect('admin/detail_pembelian/'.$this->uri->segment(3));
+			}else{
+				$this->session->set_flashdata('gagal', 'Pembelian gagal diperbarui');
+				redirect('admin/detail_pembelian/'.$this->uri->segment(3));
 			}
 		}else{
 			redirect('admin','refresh');

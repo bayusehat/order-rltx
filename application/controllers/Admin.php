@@ -588,6 +588,18 @@ class Admin extends CI_Controller {
 		}
 	}
 
+	public function to_tambah_detail_penjualan($id_penjualan)
+	{
+		if($this->session->userdata('logged_in')){
+			$detail = $this->db->query('SELECT * FROM tb_penjualan WHERE id_penjualan='.$id_penjualan)->row();
+			$data['title'] = 'Tambah detail Penjualan '.$detail->nomor_penjualan;
+			$data['detail'] = $detail;
+			$this->load->view('report/tambah_detail_penjualan', $data);
+		}else{
+			redirect('admin','refresh');
+		}
+	}
+
 	public function tindakan_penjualan($value,$row)
 	{
 		return '<a class="btn btn-primary btn-block" href="'.site_url('admin/to_retur_penjualan/'.$row->id_penjualan).'"><i class="fa fa-plus"></i> Retur Penjualan</a>
@@ -932,6 +944,18 @@ class Admin extends CI_Controller {
 			redirect('admin');
 		}
 
+	}
+
+	public function to_tambah_detail_pembelian($id_pembelian)
+	{
+		if($this->session->userdata('logged_in')){
+			$detail = $this->db->query('SELECT * FROM tb_pembelian WHERE id_pembelian='.$id_pembelian)->row();
+			$data['title'] = 'Tambah detail pembelian '.$detail->nomor_pembelian;
+			$data['detail'] = $detail;
+			$this->load->view('report/tambah_detail_pembelian', $data);
+		}else{
+			redirect('admin','refresh');
+		}
 	}
 
 	public function to_barang()

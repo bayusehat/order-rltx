@@ -183,7 +183,7 @@
 											</div>
 										<div class="row">
 											<div class="col-md-12 col-sm-12">
-												<a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalTambahDetailPenjualan"><i class="fa fa-plus"></i> Tambah Detail</a>
+												<a href="<?php echo base_url();?>index.php/admin/to_tambah_detail_penjualan/<?php echo $detail->id_penjualan;?>" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Detail</a>
 											</div>
 										</div>
 											<div class="row">
@@ -275,7 +275,6 @@
 				</div>
 			<!-- 	</form> -->
 <!-- END FORM PENJUALAN -->
-<?php include('tambah_detail_penjualan.php');?>
 <?php $this->load->view('foot_dash');?>
 <script type="text/javascript" src="<?php echo base_url().'assets/bootstrap/js/jquery-2.2.3.min.js'?>"></script>
 <script type="text/javascript" src="<?php echo base_url().'assets/bootstrap/js/bootstrap.js'?>"></script>
@@ -285,37 +284,3 @@
 <script src="<?php echo base_url().auto_version('assets/spada/js/transaksi.js'); ?>"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-<script type="text/javascript">
-	function scan_data_tambah(){
-                var input_data = $('#search_data_tambah').val();
-
-                if (input_data.length === 0)
-                {
-                    $('#suggestions').hide();
-                }
-                else
-                {
-                    var post_data = {
-                        'search_data': input_data,
-                        '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'
-                    };
-
-                    $.ajax({
-                        type: "POST",
-                        url: "<?php echo base_url();?>index.php/tambah/get_barang_tambah",
-                        data: post_data,
-                        success: function (data) {
-                            if (data.length > 0) {
-                                $('#suggestions').show();
-                                $('#autoSuggestionsList').addClass('auto_list');
-                                $('#autoSuggestionsList').html(data);
-                            }
-                        }
-                    });
-
-                }
-            }
-    function add_barang_tambah(e){
-    	
-    }
-</script>

@@ -4,21 +4,21 @@
               <!-- <div class="card"> -->
                 <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                          <a href="<?php echo base_url();?>index.php/admin/detail_penjualan/<?php echo $detail->id_penjualan;?>" class="btn btn-danger" style="float: right;"><i class="fa fa-arrow-left"></i> Kembali ke Detail Penjualan <?php echo $detail->nomor_penjualan;?></a>
+                          <a href="<?php echo base_url();?>index.php/admin/detail_penjualan/<?php echo $detail->id_pembelian;?>" class="btn btn-danger" style="float: right;"><i class="fa fa-arrow-left"></i> Kembali ke Detail Penjualan <?php echo $detail->nomor_pembelian;?></a>
                         </div>
                     </div>
               <!-- </div> -->
                 <br>
           <div>
       <!-- ROW 1 -->
-        <form method="post" action="<?php echo base_url();?>index.php/transaction/update_detail_penjualan/<?php echo $this->uri->segment(3);?>">
+        <form method="post" action="<?php echo base_url();?>index.php/transaction/update_detail_pembelian/<?php echo $this->uri->segment(3);?>">
             <div class="card">
                 <div class="row">
                   <div class="col-md-12 col-sm-12">
                     <!-- TABEL BARANG -->
                     <div class="form-group has-feedback has-search">
                       <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                              <input name="search_data" class="form-control search-input" id="search_data" placeholder="Search / Scan Produk" type="text" onkeyup="scan_data();">
+                              <input name="search_data_beli" class="form-control search-input" id="search_data_beli" placeholder="Search / Scan Produk" type="text" onkeyup="scan_data_beli();">
                                 <div id="suggestions">
                                   <div id="autoSuggestionsList">
                                   </div>
@@ -41,11 +41,11 @@
                           <tbody id="row">
                             <?php 
                             $id = $this->uri->segment(3);
-                              $query = $this->db->query('SELECT * FROM tb_detail_penjualan WHERE id_penjualan='.$id)->result();
+                              $query = $this->db->query('SELECT * FROM tb_detail_pembelian WHERE id_pembelian='.$id)->result();
                               foreach ($query as $data) {
                                 echo '<tr>
                                         <td style="width:10%">
-                                            <input type="hidden" name="id_detail_penjualan[]" value="'.$data->id_detail_penjualan.'">
+                                            <input type="hidden" name="id_detail_pembelian[]" value="'.$data->id_detail_pembelian.'">
                                             <input type="hidden" class="id" name="id_barang[]" value="'.$data->id_barang.'">
                                             <input type="text" name="sku_barang[]" value="'.$data->sku_barang.'" class="form-barang input-sm" required readonly>
                                         </td>

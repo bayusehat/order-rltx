@@ -170,6 +170,11 @@
 													</tbody>
 												</table>
 											</div>
+										<div class="row">
+											<div class="col-md-12 col-sm-12">
+												<a href="<?php echo base_url();?>index.php/admin/to_tambah_detail_pembelian/<?php echo $detail->id_pembelian;?>" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Detail</a>
+											</div>
+										</div>
 											<div class="row">
 												<div class="col-md-4 col-sm-4">
 													<div class="form-group"  style="display:none;">
