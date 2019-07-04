@@ -372,15 +372,7 @@ class Admin extends CI_Controller {
 
 			$c->set_subject('Penjualan');
 			$c->set_table('tb_penjualan');
-			// if(current_url().'/'.$this->uri->segment(3).'/'.'sales'){
-			// 	$c->where('tb_penjualan.id_sales',$this->uri->segment(3));
-			// 	$c->where('tb_penjualan.deleted',0);
-			// }else if(current_url().'/'.$this->uri->segment(3).'/'.'pelanggan'){
-			// 	$c->where('tb_penjualan.id_pelanggan',$this->uri->segment(3));
-			// 	$c->where('tb_penjualan.deleted',0);
-			// }else{
-			// 	$c->where('tb_penjualan.deleted',0);
-			// }
+			$c->where('tb_penjualan.deleted',0);
 			$c->unset_edit();
 			$c->unset_read();
 			$c->order_by('id_penjualan','DESC');
@@ -433,9 +425,9 @@ class Admin extends CI_Controller {
 			
 			foreach($get_detail_nota as $detailnota){
 				//REVERSE ARUS STOK
-				$this->db->query("UPDATE tb_barang SET stok = stok + ".$detailnota->jumlah." WHERE id_barang=".$detailnota->id_barang);	
+				$this->db->query("UPDATE tb_barang SET stok = stok - ".$detailnota->jumlah." WHERE id_barang=".$detailnota->id_barang);	
 					
-				//$this->db->query("UPDATE tb_history_stok SET mod_stok = mod_stok + ".$detailnota->jumlah." WHERE id_penjualan = ".$id_penjualan." AND id_barang=".$detailnota->id_barang);	
+				//$this->db->query("UPDATE tb_history_stok SET mod_stok = mod_stok - ".$detailnota->jumlah." WHERE id_pembelian = ".$id_pembelian." AND id_barang=".$detailnota->id_barang);	
 				$this->db->query("UPDATE tb_history_stok SET deleted = 1 WHERE id_penjualan = ".$id_penjualan." AND id_barang=".$detailnota->id_barang);	
 				//decided to just delete the history rather than modifying the mod_stok
 			}	
