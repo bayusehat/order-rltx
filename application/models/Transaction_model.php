@@ -167,20 +167,23 @@ class Transaction_model extends CI_Model {
 
     public function simpan_penjualan()
     {
-        $nomor_penjualan = $this->nomor_jual(); 	
-		$tanggal_penjualan = $this->input->post('tanggal_penjualan');
+        $nomor_penjualan     = $this->nomor_jual(); 	
+		$tanggal_penjualan   = $this->input->post('tanggal_penjualan');
         $tanggal_jatuh_tempo = $this->input->post('tanggal_jatuh_tempo');
-		$id_payment = $this->input->post('id_payment');
-        $metode = $this->input->post('metode');
-		$id_sales = $this->input->post('id_sales'); 	
-		$id_pelanggan = $this->input->post('id_pelanggan');
-		$ppn = $this->input->post('ppn');
-        $status = $this->input->post('status');
-        $tanggal_lunas = $this->input->post('tanggal_lunas');
- 		$total = $this->input->post('total');
-		$kembali = $this->input->post('kembali');
-		$bayar = $this->input->post('bayar');
-        $nominal_ppn = $this->input->post('nominal_ppn');
+		$id_payment          = $this->input->post('id_payment');
+        $metode              = $this->input->post('metode');
+		$id_sales            = $this->input->post('id_sales'); 	
+		$id_pelanggan        = $this->input->post('id_pelanggan');
+		$ppn                 = $this->input->post('ppn');
+        $status              = $this->input->post('status');
+        $tanggal_lunas       = $this->input->post('tanggal_lunas');
+ 		$total               = $this->input->post('total');
+		$kembali             = $this->input->post('kembali');
+		$bayar               = $this->input->post('bayar');
+        $nominal_ppn         = $this->input->post('nominal_ppn');
+        $nama_pembeli        = $this->input->post('nama_pembeli');
+        $alamat_pembeli      = $this->input->post('alamat_pembeli');
+        $no_telp_pembeli     = $this->input->post('no_telp_pembeli');
 
 		$data = array(
 			// 'no_serial'	=> $no_serial,
@@ -198,7 +201,10 @@ class Transaction_model extends CI_Model {
 			'bayar' => $bayar,
 			'total' => $total, 
 			'sisa' => $kembali,
-            'nominal_ppn' => $nominal_ppn
+            'nominal_ppn' => $nominal_ppn,
+            'nama_pembeli' => $nama_pembeli,
+            'alamat_pembeli' => $alamat_pembeli,
+            'no_telp_pembeli' => $no_telp_pembeli
 		);
 		
 		$this->db->insert('tb_penjualan',$data);
@@ -289,33 +295,39 @@ class Transaction_model extends CI_Model {
 
     public function edit_penjualan($id_penjualan)
     {     
-        $tanggal_penjualan = $this->input->post('tanggal_penjualan');
+        $tanggal_penjualan   = $this->input->post('tanggal_penjualan');
         $tanggal_jatuh_tempo = $this->input->post('tanggal_jatuh_tempo');
-        $id_payment = $this->input->post('id_payment');
-        $metode = $this->input->post('metode');
-        $id_sales = $this->input->post('id_sales');     
-        $id_pelanggan = $this->input->post('id_pelanggan');
-        $ppn = $this->input->post('ppn');
-        $status = $this->input->post('status');
-        $tanggal_lunas = $this->input->post('tanggal_lunas');
-        $total = $this->input->post('total');
-        $kembali = $this->input->post('kembali');
-        $bayar = $this->input->post('bayar');
+        $id_payment          = $this->input->post('id_payment');
+        $metode              = $this->input->post('metode');
+        $id_sales            = $this->input->post('id_sales');     
+        $id_pelanggan        = $this->input->post('id_pelanggan');
+        $ppn                 = $this->input->post('ppn');
+        $status              = $this->input->post('status');
+        $tanggal_lunas       = $this->input->post('tanggal_lunas');
+        $total               = $this->input->post('total');
+        $kembali             = $this->input->post('kembali');
+        $bayar               = $this->input->post('bayar');
+        $nama_pembeli        = $this->input->post('nama_pembeli');
+        $alamat_pembeli      = $this->input->post('alamat_pembeli');
+        $no_telp_pembeli     = $this->input->post('no_telp_pembeli');
 
         $data = array(
-            'tanggal_penjualan' => $tanggal_penjualan,
+            'tanggal_penjualan'   => $tanggal_penjualan,
             'tanggal_jatuh_tempo' => $tanggal_jatuh_tempo,
-            'id_payment' => $id_payment,
-            'id_pelanggan' => $id_pelanggan,
-            'id_sales' => $id_sales,
-            'id_user' => $this->session->userdata('id_user'),
-            'ppn' => $ppn,
-            'status' => $status,
-            'tanggal_lunas' => $tanggal_lunas,
-            'metode' => $metode,
-            'total' => $total,
-            'bayar' => $bayar,
-            'sisa' => $kembali
+            'id_payment'          => $id_payment,
+            'id_pelanggan'        => $id_pelanggan,
+            'id_sales'            => $id_sales,
+            'id_user'             => $this->session->userdata('id_user'),
+            'ppn'                 => $ppn,
+            'status'              => $status,
+            'tanggal_lunas'       => $tanggal_lunas,
+            'metode'              => $metode,
+            'total'               => $total,
+            'bayar'               => $bayar,
+            'sisa'                => $kembali,
+            'nama_pembeli'        => $nama_pembeli,
+            'alamat_pembeli'      => $alamat_pembeli,
+            'no_telp_pembeli'     => $no_telp_pembeli
         );
 
         $this->db->where('id_penjualan', $id_penjualan)

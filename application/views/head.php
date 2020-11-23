@@ -34,7 +34,7 @@
 	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url(); ?>assets/spada/images/icon-rltx.png">
     <meta name="description" content="Backend UI" />
     <meta name="author" content="SPADA Digital Consulting" />
-	<title><?php echo $title;?> - SPADA Store</title>
+	<title><?php echo $title;?> - RLTX Store</title>
     <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo base_url();?>assets/spada/css/bootstrap-3.3.7.min.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/spada/css/normalize.css" type="text/css" media="screen">

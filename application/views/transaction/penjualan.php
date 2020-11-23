@@ -48,6 +48,18 @@
 											</select>
 										</div>
 										<div class="form-group">
+											<label>Nama Pembeli</label>
+											<input type="text" name="nama_pembeli" id="nama_pembeli" class="form-control input-sm" placeholder="Nama Pembeli">
+										</div>
+										<div class="form-group">
+											<label>No. Telp Pembeli</label>
+											<input type="text" name="no_telp_pembeli" id="no_telp_pembeli" class="form-control input-sm" placeholder="Nomor Telepon Pembeli">
+										</div>
+										<div class="form-group">
+											<label>Alamat Pembeli</label>
+											<textarea name="alamat_pembeli" id="alamat_pembeli" class="form-control input-sm" cols="30" rows="10"></textarea>
+										</div>
+										<!-- <div class="form-group">
 											<label>Sales</label>
 											<select class="form-control input-sm inputs" name="id_sales" required="" id="id_sales">
 												<option value=""> Pilih Sales</option>
@@ -63,7 +75,7 @@
 													}
 												?>
 											</select>
-										</div>
+										</div> -->
 										<div class="form-group">
 											<label>Payment</label>
 											<select class="form-control input-sm inputs" name="id_payment" required="" id="id_payment">
