@@ -63,10 +63,10 @@
 						            	$no = 1;
 						            		foreach ($kartu_stok as $data) {
 						            			if($data->deleted == 0){
-						            				if($data->keterangan == 'Penjualan'){
+						            				if($data->keterangan == 'Penjualan' || $data->keterangan == 'Update Detail Penjualan'){
 						            					$new = $data->nomor_penjualan;
 						            					$tgl = $data->tanggal_penjualan;
-						            				}else if($data->keterangan == 'Pembelian'){
+						            				}else if($data->keterangan == 'Pembelian' || $data->keterangan == 'Update Detail Pembelian'){
 						            					$new = $data->nomor_pembelian;
 						            					$tgl = $data->tanggal_pembelian;
 						            				}else{

@@ -37,6 +37,7 @@ class Transaction_model extends CI_Model {
     	$harga_jual = $this->input->post('harga_jual');
     	$stok		= $this->input->post('stok_barang');
         $satuan     = $this->input->post('satuan');
+        $kategori   = $this->input->post('id_kategori_barang');
 
     	$data = array(
     		'sku_barang' => $sku_barang,
@@ -44,8 +45,9 @@ class Transaction_model extends CI_Model {
     		'harga_modal'=> $harga_modal,
     		'harga_jual' => $harga_jual,
     		'stok'		 => $stok,
-            'satuan'     => $satuan 
-    	);
+            'satuan'     => $satuan,
+            'id_kategori_barang' => $kategori 
+        );
 
     	$this->db->insert('tb_barang',$data);
     	$id_barang = $this->db->insert_id();
@@ -76,7 +78,8 @@ class Transaction_model extends CI_Model {
     	$stok		= $this->input->post('stok_barang');
     	$stok_tambah= $this->input->post('stok_tambah');
     	$stok_baru 	= $stok+$stok_tambah;
-        $satuan     = $this->input->post('satuan'); 
+        $satuan     = $this->input->post('satuan');
+        $kategori   = $this->input->post('id_kategori_barang'); 
 
     	$data = array(
     		'sku_barang' => $sku_barang,
@@ -84,7 +87,8 @@ class Transaction_model extends CI_Model {
     		'harga_modal'=> $harga_modal,
     		'harga_jual' => $harga_jual,
     		'stok'		 => $stok_baru,
-            'satuan'     => $satuan 
+            'satuan'     => $satuan,
+            'id_kategori_barang' => $kategori 
     	);
 
         if($stok_tambah != '0'){
@@ -1285,6 +1289,7 @@ class Transaction_model extends CI_Model {
                         ->join('tb_pembelian','tb_pembelian.id_pembelian=tb_history_stok.id_pembelian','left')
                         ->join('tb_barang','tb_barang.id_barang=tb_history_stok.id_barang')
                         ->where('tb_barang.id_barang',$id_barang)
+                        ->where('tb_history_stok.deleted',0)
                         ->get()
                         ->result();
     }

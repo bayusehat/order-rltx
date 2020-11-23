@@ -25,6 +25,16 @@
 				            			<label>SKU</label>
 				            			<input type="text" name="sku_barang" class="form-control" placeholder="SKU Barang" id="sku_barang" onkeyup="auto_fill.call(this);">
 				            		</div>
+									<div class="form-group">
+										<label>Kategori Barang</label>
+										<select name="id_kategori_barang" id="id_kategori_barang" class="form-control select2">
+											<?php
+												foreach ($kategori_barang as $i => $kb) {
+													echo '<option value="'.$kb->id_kategori_barang.'">'.$kb->nama_kategori.'</option>';
+												}
+											?>
+										</select>
+									</div>
 				            		<div class="form-group">
 				            			<label>Nama Barang</label>
 				            			<input type="text" name="nama_barang" class="form-control" placeholder="Nama Barang" id="nama">

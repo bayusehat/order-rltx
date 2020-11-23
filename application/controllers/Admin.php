@@ -145,15 +145,17 @@ class Admin extends CI_Controller {
 			$c = new grocery_CRUD();
 
 			$c->set_subject('Barang');
-			$c->where('deleted',0);
+			$c->where('tb_barang.deleted',0);
 			$c->order_by('id_barang','DESC');
 			$c->set_table('tb_barang');
 			$c->display_as('kode_barang','Kode')
+			  ->display_as('id_kategori_barang','Kategori')
 			  ->display_as('nama_barang','Barang')
 			  ->display_as('harga_modal','Harga Modal')
 			  ->display_as('harga_jual','Harga Jual')
 			  ->display_as('sku_barang','SKU Barang');
 			$c->unset_columns('created','updated','deleted');
+			$c->set_relation('id_kategori_barang','tb_kategori_barang','nama_kategori');
 			$c->unset_add();
 			$c->unset_fields('created','updated','deleted');
 			$c->required_fields('kode_barang','nama_barang','harga_jual','harga_modal','stok');
@@ -954,6 +956,7 @@ class Admin extends CI_Controller {
 	{
 		if($this->session->userdata('logged_in') == TRUE){
 			$data['title'] = 'Tambah / Update Barang';
+			$data['kategori_barang'] = $this->db->query('select * from tb_kategori_barang where deleted = 0 and status_kategori = 0')->result();
 			$this->load->view('add_barang', $data);
 		}else{
 			redirect('admin','refresh');
@@ -2285,6 +2288,35 @@ class Admin extends CI_Controller {
 	public function delete_detail_stock_opname_baru($primary_key)
 	{
 		return $this->db->update('tb_detail_stock_opname_baru', array('deleted'=>'1'),array('id_detail_stock_opname_baru'=>$primary_key));
+	}
+
+	public function kategori_barang()
+	{
+		if($this->session->userdata('logged_in') == TRUE){
+			$c = new grocery_CRUD();
+
+			$c->set_subject('Kategori Barang');
+			$c->where('deleted',0);
+			$c->order_by('id_kategori_barang','ASC');
+			$c->set_table('tb_kategori_barang');
+			$c->display_as('nama_kategori','Nama');
+			$c->unset_columns('created','updated','deleted','status_kategori');
+			$c->unset_fields('created','updated','deleted','status_kategori');
+			$c->required_fields('nama_kategori');
+			//$c->callback_update(array($this,'update_stok'));
+			$c->callback_delete(array($this,'delete_kategori_barang'));
+			$title = 'Data Kategori Barang';
+			$this->load->vars( array('title' => $title));
+			$output = $c->render();
+			$this->load->view('data_kategori_barang', $output);
+		}else{
+			redirect('admin');
+		}
+	}
+
+	public function delete_kategori_barang($id)
+	{
+		return $this->db->query('tb_kategori_barang',['deleted' => 1],['id_kategori_barang' =>  $id]);
 	}
 }
 

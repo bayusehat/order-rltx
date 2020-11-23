@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Inlin Jaya Variasi Login Admin</title>
+        <title>Order RLTX - Login</title>
         <link rel="icon" href="<?php echo base_url();?>assets/spada/images/icon.png" type="image/png" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/bootstrap/css/bootstrap.min.css">
@@ -20,11 +20,11 @@
             <div class="container">
             <div class="row">
                 <div class="col-md-4 col-md-offset-4 col-sm 4">
-                    <img src="<?php echo base_url();?>assets/spada/images/logo.png" alt="logo" class="img-responsive"/>
+                    <img src="<?php echo base_url();?>assets/spada/images/logo-rltx.png" alt="logo" class="img-responsive"/>
                     <br>
                     <div class="login-panel panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title" style="text-align:center">Inlin Jaya Variasi Login Admin</h3>
+                            <h3 class="panel-title" style="text-align:center">Order RLTX - Login</h3>
                         </div>
                         <div class="panel-body">
                             <div class="alert alert-success center" id="berhasil"><i class="fa fa-check-circle"></i> Login berhasil!</div>

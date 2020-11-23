@@ -17,6 +17,7 @@ function auto_fill() {
                    $("#harga2").val(result.harga_jual);
                    $("#stok_barang").val(result.stok);
                    $("#satuan").val(result.satuan);
+                   $("#id_kategori_barang").val(res.id_kategori_barang).trigger('change');
                    $(".stok_edit").show();
                    $(".btn-new").hide().attr('disabled',true);
                    $(".btn-update").show().attr('disabled',false);

@@ -27,7 +27,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,target-densitydpi=device-dpi, user-scalable=no" /> -->
-	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url(); ?>assets/spada/images/icon.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url(); ?>assets/spada/images/icon-rltx.png">
     <meta name="description" content="Backend UI" />
     <meta name="author" content="SPADA Digital Consulting" />
 	<title><?php echo $title;?> - SPADA Store</title>
@@ -138,7 +138,7 @@
     <div id="main" class="group">
         <div id="left-panel" class="col">
             <div id="logo">
-                <img src="<?php echo base_url();?>assets/spada/images/logo.png">
+                <img src="<?php echo base_url();?>assets/spada/images/logo-rltx.png">
             </div>
             <div id="left-navigation">
                 <ul class="main-menu">
@@ -153,6 +153,9 @@
                             <ul class="sub-menu">
                                 <li class="sub-menu-item">
                                     <a href="'.base_url().'index.php/admin/barang">Data Barang</a>
+                                </li>
+                                <li class="sub-menu-item">
+                                    <a href="'.base_url().'index.php/admin/kategori_barang">Data Kategori Barang</a>
                                 </li>
                                  <li class="sub-menu-item">
                                     <a href="'.base_url().'index.php/admin/pelanggan">Data Pelanggan</a>
